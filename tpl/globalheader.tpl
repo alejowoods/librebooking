@@ -355,8 +355,9 @@
                                 <i class="bi bi-globe-americas"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{$Path}change-language.php?lang=en_us">English</a></li>
-                                <li><a class="dropdown-item" href="{$Path}change-language.php?lang=de_de">Deutsch</a></li>
+                                {foreach from=$Languages item=language}
+                                    <li><a class="dropdown-item" href="{$Path}change-language.php?lang={$language->GetLanguageCode()}">{$language->GetDisplayName()}</a></li>
+                                {/foreach}
                             </ul>   
                         </li>
 

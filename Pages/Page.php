@@ -43,6 +43,7 @@ abstract class Page implements IPage
         $this->smarty = new SmartyPage($resources, $this->path);
 
         $userSession = ServiceLocator::GetServer()->GetUserSession();
+        $this->smarty->assign('Languages', $resources->AvailableLanguages);
         $this->smarty->assign('Timezone', $userSession->Timezone);
         $this->smarty->assign('Charset', $resources->Charset);
         $this->smarty->assign('CurrentLanguage', $resources->CurrentLanguage);
