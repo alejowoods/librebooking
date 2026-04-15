@@ -217,6 +217,8 @@ class SmartyPage extends Smarty
         $this->registerPlugin('function', 'flush', $this->Flush(...));
         $this->registerPlugin('function', 'jsfile', $this->IncludeJavascriptFile(...));
         $this->registerPlugin('function', 'cssfile', $this->IncludeCssFile(...));
+        $this->registerPlugin('function', 'vendor_js', $this->IncludeVendorJavascriptFile(...));
+        $this->registerPlugin('function', 'vendor_css', $this->IncludeVendorCssFile(...));
         $this->registerPlugin('function', 'indicator', $this->DisplayIndicator(...));
         $this->registerPlugin('function', 'read_only_attribute', $this->ReadOnlyAttribute(...));
         $this->registerPlugin('function', 'csrf_token', $this->CSRFToken(...));
@@ -585,9 +587,37 @@ class SmartyPage extends Smarty
             $make_email_clickable_cb,
             (string) $url
         );
-        $url = preg_replace("#(<a( [^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i", "$1$3</a>", (string) $url);
+        $url = preg_replace('#(<a( [^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i', '$1$3</a>', (string) $url);
         $url = trim((string) $url);
         return $url;
+    }
+
+    private function GetDefaultDataTablePageSize()
+    {
+        $defaultPageSize = intval(Configuration::Instance()->GetKey(ConfigKeys::DEFAULT_PAGE_SIZE));
+
+        return $defaultPageSize > 0 ? $defaultPageSize : 50;
+    }
+
+    private function BuildDataTableLengthMenu($allText)
+    {
+        $defaultPageSize = $this->GetDefaultDataTablePageSize();
+
+        $pageSizes = [25, 50, 75, 100];
+        if (!in_array($defaultPageSize, $pageSizes, true)) {
+            $pageSizes[] = $defaultPageSize;
+            sort($pageSizes);
+        }
+
+        $lengthValues = array_merge($pageSizes, [-1]);
+        $lengthLabels = array_map('strval', $pageSizes);
+        $lengthLabels[] = $allText;
+
+        return sprintf(
+            '[%s, %s]',
+            json_encode($lengthValues),
+            json_encode($lengthLabels, JSON_UNESCAPED_UNICODE)
+        );
     }
 
     public function CreateDataTable($params)
@@ -602,6 +632,8 @@ class SmartyPage extends Smarty
         $showHideText = $this->Resources->GetString('ShowHide');
         $infoText = $this->Resources->GetString('Info');
         $lengthMenuText = $this->Resources->GetString('LengthMenu');
+        $defaultPageSize = $this->GetDefaultDataTablePageSize();
+        $lengthMenu = $this->BuildDataTableLengthMenu($AllText);
 
         if ($tableId == 'report-results') {
             $pagination = '"paging": false,
@@ -610,7 +642,7 @@ class SmartyPage extends Smarty
                 "info": false,
                 "ordering": false,';
         } else {
-            $pagination = '"lengthMenu": [ [25, 50, 75, 100, -1], [ 25, 50, 75, 100, "' . $AllText . '"] ],';
+            $pagination = '"pageLength": ' . $defaultPageSize . ', "lengthMenu": ' . $lengthMenu . ',';
         }
 
         return sprintf(
@@ -675,12 +707,15 @@ class SmartyPage extends Smarty
         $NoResultsFoundText = $this->Resources->GetString('NoResultsFound');
         $infoText = $this->Resources->GetString('Info');
         $lengthMenuText = $this->Resources->GetString('LengthMenu');
+        $defaultPageSize = $this->GetDefaultDataTablePageSize();
+        $lengthMenu = $this->BuildDataTableLengthMenu($viewAllText);
 
         return sprintf(
             '<script>
            var table =  $("#' . $tableId . '").DataTable({
                 "dom": \'<"d-flex justify-content-between my-1"fl><t>t<"d-flex justify-content-center"i><"d-flex justify-content-center"p><"clear">\',
-                "lengthMenu": [ [25, 50, 75, 100, -1], [ 25, 50, 75, 100, "' . $viewAllText . '"] ],
+                "pageLength": ' . $defaultPageSize . ',
+                "lengthMenu": ' . $lengthMenu . ',
                 language: {
                     search: "' . $searchText . '",
                     info: "' . $searchText . '",
@@ -798,6 +833,20 @@ class SmartyPage extends Smarty
             $src = "css/{$src}";
         }
         echo "<link rel='stylesheet' type='text/css' href='{$this->RootPath}{$src}?v=$versionNumber'/>";
+    }
+
+    public function IncludeVendorJavascriptFile(array $params, $smarty): void
+    {
+        $versionNumber = Configuration::VERSION;
+        $async = isset($params['async']) ? ' async' : '';
+        echo "<script type=\"text/javascript\" src=\"{$this->RootPath}assets/vendor/{$params['src']}?v=$versionNumber\"{$async}></script>";
+    }
+
+    public function IncludeVendorCssFile(array $params, $smarty): void
+    {
+        $versionNumber = Configuration::VERSION;
+        $src = $params['src'];
+        echo "<link rel='stylesheet' type='text/css' href='{$this->RootPath}assets/vendor/{$src}?v=$versionNumber'/>";
     }
 
     public function DisplayIndicator($params, $smarty)
@@ -930,16 +979,16 @@ class SmartyPage extends Smarty
         $indicator = '';
         if ($sortField == $currentField) {
             $sortDirection = $currentDirection == 'asc' ? 'desc' : 'asc';
-            $indicator = "<i class=\"bi bi-caret-down-fill\"></i>";
+            $indicator = '<i class="bi bi-caret-down-fill"></i>';
             if ($currentDirection == 'asc') {
-                $indicator = "<i class=\"bi bi-caret-up-fill\"></i>";
+                $indicator = '<i class="bi bi-caret-up-fill"></i>';
             }
         }
 
         if (BookedStringHelper::Contains($url, $sd)) {
             $url = preg_replace("/$sd=(asc|desc)&?/", "$sd=$sortDirection&", (string) $url);
         } else {
-            $url = $url . ($hasQueryString ? "&" : "?") . "$sd=$sortDirection";
+            $url = $url . ($hasQueryString ? '&' : '?') . "$sd=$sortDirection";
         }
 
         if (BookedStringHelper::Contains($url, $sf)) {

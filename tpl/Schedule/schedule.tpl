@@ -40,7 +40,7 @@
 {* End slot display formatting *}
 
 {block name="header"}
-    {include file='globalheader.tpl' Qtip=true Select2=true DatePicker=true cssFiles='scripts/css/jqtree.css,css/schedule.css' printCssFiles='css/schedule.print.css'}
+    {include file='globalheader.tpl' Qtip=true Select2=true DatePicker=true cssFiles='assets/vendor/jqtree/1.6.2/css/jqtree.css,css/schedule.css' printCssFiles='css/schedule.print.css'}
 {/block}
 
 <div id="page-schedule">
@@ -87,21 +87,22 @@
                             <div class="d-flex align-items-center">
                                 <a href="#" id="print_schedule" class="link-primary me-1" title="{translate key=Print}"><span
                                         class="bi bi-printer"></span></a>
-                                <a href="#" id="make_default" class="link-primary me-2" style="display:none;"><i
+                                <a href="#" id="make_default" class="link-primary me-2" style="display:none;" title="{translate key='MakeDefaultSchedule'}"><i
                                         class="bi bi-star-fill"></i></a>
                                 <a href="#" class="schedule-style me-1" id="schedule_standard"
-                                    schedule-display="{ScheduleStyle::Standard}">
+                                    schedule-display="{ScheduleStyle::Standard->value}" title="{translate key='StandardScheduleDisplay'}">
                                     <img src="img/table.png" alt="{translate key='StandardScheduleDisplay'}" />
                                 </a>
-                                <a href="#" class="schedule-style me-1" id="schedule_tall" schedule-display="{ScheduleStyle::Tall}">
+                                <a href="#" class="schedule-style me-1" id="schedule_tall"
+                                    schedule-display="{ScheduleStyle::Tall->value}" title="{translate key='TallScheduleDisplay'}">
                                     <img src="img/table-tall.png" alt="{translate key='TallScheduleDisplay'}" />
                                 </a>
                                 <a href="#" class="schedule-style d-none d-md-block me-1" id="schedule_wide"
-                                    schedule-display="{ScheduleStyle::Wide}">
+                                    schedule-display="{ScheduleStyle::Wide->value}" title="{translate key='WideScheduleDisplay'}">
                                     <img src="img/table-wide.png" alt="{translate key='WideScheduleDisplay'}" />
                                 </a>
                                 <a href="#" class="schedule-style d-none d-md-block" id="schedule_week"
-                                    schedule-display="{ScheduleStyle::CondensedWeek}">
+                                    schedule-display="{ScheduleStyle::CondensedWeek->value}" title="{translate key='CondensedWeekScheduleDisplay'}">
                                     <img src="img/table-week.png" alt="{translate key='CondensedWeekScheduleDisplay'}" />
                                 </a>
                             </div>
@@ -149,7 +150,9 @@
                 <button class="btn btn-sm btn-primary mx-auto" href="#" id="individualDatesGo">
                     <i class="bi bi-search me-1"></i>{translate key=SpecificDates}
                 </button>
-                <div type="text" id="datepicker" class="collapse"></div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <div id="datepicker" class="collapse"></div>
+                </div>
             </div>
 
 
@@ -409,12 +412,11 @@
 
 {/block}
 
-{jsfile src="js/html2canvas.min.js"}
-{jsfile src="js/moment.min.js"}
+{vendor_js src="html2canvas/1.4.1/js/html2canvas.min.js"}
 {jsfile src="schedule.js"}
 {jsfile src="resourcePopup.js"}
-{jsfile src="js/tree.jquery.js"}
-{jsfile src="js/jquery.cookie.js"}
+{vendor_js src="jqtree/1.6.2/js/tree.jquery.js"}
+{vendor_js src="jquery-cookie/1.3.1/js/jquery.cookie.js"}
 {jsfile src="autocomplete.js"}
 {jsfile src="ajax-helpers.js"}
 <script type="text/javascript">
@@ -447,6 +449,7 @@
         fastReservationLoad: "{$FastReservationLoad}",
         resourceMaxConcurrentReservations,
         autoScrollToday: {$AutoScrollToday|@json_encode},
+        altFormatDate: "{Resources::GetInstance()->GetDateFormat('schedule_daily')}",
     };
 
     const resourceOrder = [];
@@ -479,7 +482,7 @@
 
 {control type="DatePickerSetupControl"
 ControlId='datepicker'
-HasTimepicker=false
+AltInput=false
 Inline=true
 DefaultDate=$FirstDate
 NumberOfMonths=$PopupMonths

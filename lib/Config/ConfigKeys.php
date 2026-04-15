@@ -86,6 +86,14 @@ class ConfigKeys
         'description' => 'Default language for the application'
     ];
 
+    public const ENABLED_LANGUAGES = [
+        'key' => 'enabled.languages',
+        'type' => 'string',
+        'default' => '',
+        'label' => 'Enabled Languages',
+        'description' => 'Comma-separated list of language codes to show in the language selector (e.g. "en_us,fr_fr,de_de"). Languages appear in the order listed. If empty, all supported languages are shown. Language codes must match those defined in lang/AvailableLanguages.php. If the value of default.language is not included in this list, the application will fall back to en_us and log an error.'
+    ];
+
     // Frontend
 
     # previously INSTALLATION_PASSWORD
@@ -111,9 +119,9 @@ class ConfigKeys
         'key' => 'use.local.js.libs',
         'legacy' => 'use.local.js',
         'type' => 'boolean',
-        'default' => false,
-        'label' => 'Use Local JS Libraries',
-        'description' => 'Use local JavaScript libraries instead of CDN',
+        'default' => true,
+        'label' => 'Use Local Frontend Assets',
+        'description' => 'Use bundled/self-hosted frontend assets (JavaScript libraries, CSS, fonts) instead of CDN-hosted assets',
     ];
 
     public const INACTIVITY_TIMEOUT = [
@@ -212,7 +220,7 @@ class ConfigKeys
         'type' => 'integer',
         'default' => 50,
         'label' => 'Default Page Size',
-        'description' => 'Default number of items per page in listings'
+        'description' => 'Default number of items per page in listings. Use a positive integer; -1 is not supported for performance reasons.'
     ];
 
     // Database
@@ -309,6 +317,15 @@ class ConfigKeys
         ],
         'label' => 'SMTP Secure',
         'description' => 'Encryption type for SMTP',
+        'section' => 'phpmailer'
+    ];
+
+    public const PHPMAILER_SMTP_AUTOTLS = [
+        'key' => 'phpmailer.smtp.autotls',
+        'type' => 'boolean',
+        'default' => true,
+        'label' => 'SMTP AutoTLS',
+        'description' => 'If an unencrypted SMTP connection should attempt to use STARTTLS',
         'section' => 'phpmailer'
     ];
 
@@ -691,8 +708,8 @@ class ConfigKeys
         'key' => 'reservation.prevent.participation',
         'type' => 'boolean',
         'default' => false,
-        'label' => 'Prevent Participation',
-        'description' => 'Prevent users from participating in reservations',
+        'label' => 'Disable Participation & Invitations',
+        'description' => 'Disable reservation participation/invitations and hide participant/invitee lists in the reservation UI',
         'section' => 'reservation'
     ];
     public const RESERVATION_PREVENT_RECURRENCE = [
@@ -727,10 +744,10 @@ class ConfigKeys
         'choices' => [
             'none' => 'Any time',
             'future' => 'Future',
-            'same_day' => 'Same day'
+            'current' => 'Current'
         ],
         'label' => 'Start Time Constraint',
-        'description' => 'Restrict start times. Options: future, any, same_day',
+        'description' => 'Restrict start times. Options: future, none, current. In the standard reservation create/update flow, application admins are always exempt. Group admins are exempt only when they administer the reservation user. Resource and schedule admins are exempt only when they administer all resources in the reservation.',
         'section' => 'reservation'
     ];
     public const RESERVATION_UPDATES_REQUIRE_APPROVAL = [
@@ -799,8 +816,8 @@ class ConfigKeys
         'key' => 'reservation.default.start.reminder',
         'type' => 'string',
         'default' => '',
-        'label' => 'Default Start Reminder (minutes)',
-        'description' => 'Default start reservation reminder. format is ## interval. for example, 10 minutes, 2 hours, 6 days.',
+        'label' => 'Default reminder time before reservation start (e.g., \'15 minutes\', \'1 hours\', \'1 days\')',
+        'description' => 'Default start reservation reminder. Format is an interval using only minutes, hours, or days',
         'section' => 'reservation'
     ];
     # previously RESERVATION_DEFAULT_END_REMINDER
@@ -808,8 +825,8 @@ class ConfigKeys
         'key' => 'reservation.default.end.reminder',
         'type' => 'string',
         'default' => '',
-        'label' => 'Default End Reminder (minutes)',
-        'description' => 'Default end reservation reminder. format is ## interval. for example, 10 minutes, 2 hours, 6 days.',
+        'label' => 'Default reminder time before reservation end (e.g., \'15 minutes\', \'1 hours\', \'1 days\')',
+        'description' => 'Default end reservation reminder. Format is an interval using only minutes, hours, or days (e.g., 1 days)',
         'section' => 'reservation'
     ];
 
@@ -962,6 +979,14 @@ class ConfigKeys
     ];
 
     // Tablet View Options
+    public const TABLET_VIEW_ALLOW_RESERVATIONS = [
+        'key' => 'tablet.view.allow.reservations',
+        'type' => 'boolean',
+        'default' => true,
+        'label' => 'Allows reservations',
+        'description' => 'Allows users to make reservations in the tablet view',
+        'section' => 'tablet.view'
+    ];
 
     # previously TABLET_VIEW_ALLOW_GUESTS
     public const TABLET_VIEW_ALLOW_GUEST_RESERVATIONS = [
@@ -1472,6 +1497,14 @@ class ConfigKeys
         'default' => '',
         'label' => 'OAuth2 Name',
         'description' => 'Display name for OAuth2 login',
+        'section' => 'authentication'
+    ];
+    public const AUTHENTICATION_OAUTH2_STRIP_TRAILING_SLASH = [
+        'key' => 'authentication.oauth2.strip.trailing.slash',
+        'type' => 'boolean',
+        'default' => true,
+        'label' => 'Removes authorize URL trailing slash',
+        'description' => 'When enabled, removes any trailing slash on the OAuth2 authorize URL; when disabled, preserves a trailing slash if present. Does not affect token or userinfo URLs.',
         'section' => 'authentication'
     ];
     public const AUTHENTICATION_OAUTH2_URL_AUTHORIZE = [

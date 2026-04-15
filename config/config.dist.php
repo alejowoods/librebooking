@@ -19,7 +19,8 @@ return [
         # The public name of the application
         'app.title' => 'LibreBooking',
 
-        # The public name of the application
+        # Enable or disable debug mode for the application
+        # if enabled it will enable 'display_errors' and 'display_startup_errors'
         'app.debug' => false,
 
         # Administrator email address
@@ -46,6 +47,15 @@ return [
         # Options: Find your language in the lang directory
         'default.language' => 'en_us',
 
+        # Restrict which languages appear in the language selector.
+        # Comma-separated list of language codes (e.g. 'en_us,fr_fr,de_de').
+        # Languages appear in the selector in the order listed.
+        # Leave empty to show all supported languages.
+        # Language codes must match those defined in lang/AvailableLanguages.php.
+        # If the value of `default.language` is not included in this list, the
+        # application will fall back to 'en_us' and log an error.
+        'enabled.languages' => '',
+
 
         ##########################
         # Frontend
@@ -63,8 +73,8 @@ return [
         # Enable template caching. Recommended for production. (true/false)
         'cache.templates' => true,
 
-        # Enable use of local JavaScript libraries (true/false)
-        'use.local.js.libs' => false,
+        # Enable use of bundled/self-hosted frontend assets (JavaScript, CSS, fonts) (true/false)
+        'use.local.js.libs' => true,
 
         # Session inactivity timeout in minutes
         'inactivity.timeout' => 30,
@@ -78,6 +88,10 @@ return [
         # Default homepage to use when new users register
         # Options:  1 = Dashboard, 2 = Schedule, 3 = My Calendar, 4 = Resource Calendar
         'default.homepage' => 1,
+
+        # Default number of items per page in listings
+        # Use a positive integer. -1 is not supported for performance reasons
+        'default.page.size' => 50,
 
         # Optional path to a custom CSS file
         'css.extension.file' => '',
@@ -136,6 +150,9 @@ return [
             # SMTP encryption
             # Options: tls, ssl
             'smtp.secure' => '',
+
+            # SMTP Auto TLS, if an unencrypted SMTP connection should attempt to use STARTTLS
+            'smtp.autotls' => true,
 
             # Enable SMTP authentication (true/false)
             'smtp.auth' => true,
@@ -295,7 +312,7 @@ return [
         ##########################################
 
         'reservation' => [
-            # Prevent participants from being added to reservations (true/false)
+            # Disable reservation participation/invitations and hide participant/invitee lists in the reservation UI (true/false)
             'prevent.participation' => false,
 
             # Disable recurring reservations (true/false)
@@ -307,7 +324,11 @@ return [
             # Enable a waitlist for fully booked reservations (true/false)
             'allow.wait.list' => false,
 
-            # Restrict start times (e.g., 'future', 'none', 'same_day')
+            # Restrict start times (e.g., 'future', 'none', 'current')
+            # Note: In the standard reservation create/update flow, exemptions from this constraint apply only in specific cases:
+            #   - Application admins are always exempt.
+            #   - Group admins are exempt only when acting as admin for the reservation user.
+            #   - Resource and schedule admins are exempt only when they administer all resources in the reservation.
             'start.time.constraint' => 'future',
 
             # Require approval when an existing reservation is updated (true/false)
@@ -342,10 +363,10 @@ return [
             # Enable reminder notifications for upcoming reservations (true/false)
             'reminders.enabled' => false,
 
-            # Default reminder time before reservation start (in minutes)
+            # Default reminder time before reservation start (e.g., '15 minutes', '1 hours', '1 days')
             'default.start.reminder' => '',
 
-            # Default reminder time before reservation end (in minutes)
+            # Default reminder time before reservation end (e.g., '15 minutes', '1 hours', '1 days')
             'default.end.reminder' => '',
         ],
 
@@ -440,6 +461,9 @@ return [
         ##########################################
 
         'tablet.view' => [
+            # Allow users to make reservations in the tablet view (true/false)
+            'allow.reservations' => true,
+
             # Allow guest users to make reservations in tablet view (true/false)
             'allow.guest.reservations' => false,
 
@@ -698,6 +722,8 @@ return [
             'oauth2.name' => 'OAuth2',
 
             # OAuth2 endpoint URLs and client credentials
+            # If true, the configured authorize URL's trailing slash is removed
+            'oauth2.strip.trailing.slash' => true,
             'oauth2.url.authorize' => '',
             'oauth2.url.token' => '',
             'oauth2.url.userinfo' => '',

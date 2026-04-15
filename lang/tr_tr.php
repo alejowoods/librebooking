@@ -14,7 +14,7 @@ class tr_tr extends en_gb
      */
     protected function _LoadStrings()
     {
-        $strings = [];
+        $strings = parent::_LoadStrings();
 
         $strings['FirstName'] = 'İsim';
         $strings['LastName'] = 'Soyisim';
@@ -801,12 +801,12 @@ class tr_tr extends en_gb
         $strings['PendingApprovalReservations'] = 'Onay bekleyen rezervasyonlar';
         $strings['LaterThisMonth'] = 'Bu ayın ilerisinde';
         $strings['LaterThisYear'] = 'Bu yılın ilerisinde';
-        $strings['Remaining'] = 'Kalan';        
+        $strings['Remaining'] = 'Kalan';
         //End Pending Approval Reservations in Dashboard
 
         //Missing Check In/Out Reservations in Dashboard
         $strings['NoMissingCheckOutReservations'] = 'Eksik check-out rezervasyonu yok';
-        $strings['MissingCheckOutReservations'] = 'Eksik Check Out Rezervasyonları';        
+        $strings['MissingCheckOutReservations'] = 'Eksik Check Out Rezervasyonları';
         //End Missing Check In/Out Reservations in Dashboard
 
         //Schedule Resource Permissions
@@ -825,7 +825,7 @@ class tr_tr extends en_gb
      */
     protected function _LoadDays()
     {
-        $days = [];
+        $days = parent::_LoadDays();
 
         /***
          * DAY NAMES
@@ -851,7 +851,7 @@ class tr_tr extends en_gb
      */
     protected function _LoadMonths()
     {
-        $months = [];
+        $months = parent::_LoadMonths();
 
         /***
          * MONTH NAMES
