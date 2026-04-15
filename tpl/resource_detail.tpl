@@ -5,8 +5,7 @@
 </script>
 {include file='globalheader.tpl'}
 
-{* Font Awesome for lab icons *}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 
 {* 
  * TODO for Institute Integration:
@@ -24,13 +23,13 @@
             <i class="bi bi-exclamation-triangle"></i> {$ErrorMessage|default:'Unknown error'}
         </div>
         <a href="view_resources.php" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> {translate key='BackToList'}
+            <i class="bi bi-arrow-left"></i> {translate key='BackToList'}
         </a>
     {else}
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h2 class="mb-0">
-                    <i class="fas fa-microscope"></i> {$ResourceName}
+        <div class="card shadow"> 
+            <div class="card-header bg-primary px-3 py-2 d-flex align-items-center">
+                <h2 class="mb-0 text-white" style="padding-top: 4px;">
+                    <i class="bi bi-gear"></i> {$ResourceName}
                 </h2>
             </div>
             
@@ -68,7 +67,8 @@
                         
                         <p><strong>{translate key='Status'}:</strong>
                             {if $IsAvailable}
-                                <span class="badge bg-success">{translate key='Available'}</span>
+                                <span class="resourceName px-2 py-1 rounded-1">{translate key='Available'}</span>
+
                             {else}
                                 <span class="badge bg-danger">{translate key='Unavailable'}</span>
                             {/if}
@@ -102,9 +102,9 @@
                         <p>
                             <strong>{translate key='RequiresApproval'}:</strong>
                             {if $RequiresApproval}
-                                <span class="badge bg-warning text-dark">{translate key='Yes'}</span>
+                                <span class="resourceName px-2 py-1 rounded-1">{translate key='Yes'}</span>
                             {else}
-                                <span class="badge bg-success">{translate key='No'}</span>
+                                <span class="resourceName px-2 py-1 rounded-1">{translate key='No'}</span>
                             {/if}
                         </p>
                     </div>
@@ -143,8 +143,8 @@
             
             {* Card footer at same level as card-body *}
             <div class="card-footer">
-                <div class="d-flex justify-content-between">
-                    <a href="view_resources.php" class="btn btn-secondary">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="view_resources.php" class="btn btn-secondary btn-lg">
                         <i class="bi bi-arrow-left"></i> {translate key='BackToList'|default:'Back to list'}
                     </a>
                     <a href="reservation.php?rid={$ResourceId}" class="btn btn-primary btn-lg">

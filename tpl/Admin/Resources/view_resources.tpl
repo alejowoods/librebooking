@@ -138,7 +138,7 @@
                             <tr>
                                 <td>
                                     {*1st column: Resource name and color*}
-                                    <span class="badge"  style="background-color:{if $resource->HasColor()}}{$resource->GetColor()}{else}#e0e0e0{/if}">
+                                    <span class="resourceName px-2 py-1 rounded-1">
                                         {$resource->GetName()}
                                     </span>
                                 </td>
@@ -153,9 +153,9 @@
                                 <td>
                                     {*3nd column: Resource Status with color badges*}
                                     {if $resource->IsAvailable()}
-                                        <span class="badge bg-success">{translate key='Available'}</span>
+                                        <span class="resourceName px-2 py-1 rounded-1">{translate key='Available'}</span>
                                     {elseif $resource->IsUnavailable()}
-                                        <span class="badge bg-warning">{translate key='Unavailable'}</span>
+                                        <span class="badge bg-secondary">{translate key='Unavailable'}</span>
                                     {else}
                                         <span class="badge bg-danger">{translate key='Hidden'}</span>
                                     {/if}
@@ -170,7 +170,7 @@
                                 </td>
                                 <td>
                                     {*5th column: Actions*}
-                                    <a href="resource_detail.php?id={$resource->GetResourceId()}" class="btn btn-sm btn-primary"> {*Button to the individual page: coming soon, for now it is disabled*}
+                                    <a href="resource_detail.php?id={$resource->GetResourceId()}" class="btn btn-sm btn-primary"> 
                                         <i class="bi bi-eye"></i> {translate key="ViewDetails"}
                                     </a>
                                 </td>
