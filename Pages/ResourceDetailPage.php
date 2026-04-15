@@ -1,15 +1,14 @@
 <?php
 
-require_once(ROOT_DIR . 'Pages/SecurePage.php'); 
+require_once(ROOT_DIR . 'Pages/SecurePage.php');
 require_once(ROOT_DIR . 'Presenters/ResourceDetailPresenter.php');
 
-class ResourceDetailPage extends SecurePage 
-
+class ResourceDetailPage extends SecurePage
 {
     /**
-     * @var ResourceDetailPresenter 
+     * @var ResourceDetailPresenter
      */
-    private $presenter; 
+    private $presenter;
 
     public function __construct()
     {
@@ -24,7 +23,7 @@ class ResourceDetailPage extends SecurePage
         //    $this->Redirect('../index.php');
         //    return;
         //}
-        
+
         $this->presenter->PageLoad();
 
         $this->Display('resource_detail.tpl');
