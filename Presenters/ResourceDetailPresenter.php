@@ -13,13 +13,6 @@ class ResourceDetailPresenter
     private $attributeService;
 
     /**
-     * @var ResourceDetailPage 
-     */
-    /**
-     * @var IResourceRepository
-     * This property will hold the repository instance for accessing resource data.
-     */
-    /**
      * @param ResourceDetailPage $page 
      */
 
@@ -157,7 +150,7 @@ private function PopulateTemplate($resource)
 }
 
     /** Private method that formats a duration in minutes to a human-readable string
-     * @param int $minutes 
+     * @param mixed $timeInterval 
      * @return string 
      */
     private function FormatDuration($timeInterval) 
@@ -175,7 +168,7 @@ private function PopulateTemplate($resource)
                 $minutes = $timeInterval->minutes();
             } 
         } else {
-                $minutes = inval($timeInterval);
+                $minutes = intval($timeInterval);
         }
 
         if ($minutes <= 0) {
